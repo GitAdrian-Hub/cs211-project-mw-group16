@@ -21,7 +21,8 @@ int main()
 	int current_score = 0; //to keep track of score to be updated as the game is played
 	while (choice != 'e')
 	{
-        bool changed = false; //check if movement happened
+        bool changed = false;
+		cout << "Current Score: " << current_score << endl;
 		cout << "Please enter choice:{u,d,l,r,e} for UP, DOWN, LEFT, RIGHT, Exit: " << endl;
 		cout << "Choice: ";
 		cin >> choice;
@@ -34,14 +35,25 @@ int main()
 			changed = move_left(board, size, current_score); 
 		else if (choice == 'r')
 			move_right(board, size, current_score);
+		else if (choice == 'e')
+			break;
 
 		if (changed == true)
 		{
-		    insert_random(board, size);
+		  insert_random(board, size);
+		    cout << "Move successful!" << endl;
 		}
-		print_board(board, size);
+		else
+		{
+		 cout << "Move resulted in no changes." << endl;
+		}
 
+	print_board(board, size);
 	}
+
+	cout << "Final Score: " << current_score << endl;
+	return 0;
+}
 
 
 	return 0;
