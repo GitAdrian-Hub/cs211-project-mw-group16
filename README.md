@@ -4,4 +4,5 @@ Program two (Luhn checksum validation) will be a program that checks a 16-digit 
 Members: GitAdrian-Hub (Member A)
           laneabn (Member B)
           JM-Aero (Member C)
-We'll do our own part and meet up once a week and communicate through discord. We'll also make sure to check and test each other's code as we progress through both programs.
+We'll do our own part and meet up once a week and communicate through discord. 
+We'll also make sure to check and test each other's code as we progress through both programs.

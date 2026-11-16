@@ -1,0 +1,133 @@
+**CS211 GROUP 16 PROJECT**
+2048 Movement Dry Run
+
+1. Starting Board
+The game begins with the following 5×5 board. The initial score is 0, and the successful move count is 0.
+
+  0  2  0  2  0
+  2  2  2  0  0
+  2  2  2  2  2
+  2  2  4  0  0
+  4  4  8  0  0
+ Current score: 0
+ Successful moves: 0
+ 
+ 2. Movement Command
+  The user enters 'l' to move all tiles to the left.The program processes each row independently, sliding nonzero tiles 
+  toward the left and merging adjacent tiles with matching values. 
+
+3. Sliding and Merging Steps
+
+| Row | Starting Values | After Sliding | After Merging | Score Gained |
+|:---:|:---|:---|:---|:---:|
+| 1   | 0, 2, 0, 2, 0   | 2, 2, 0, 0, 0 | 4, 0, 0, 0, 0 | +4 |
+| 2   | 2, 2, 2, 0, 0   | 2, 2, 2, 0, 0 | 4, 2, 0, 0, 0 | +4 |
+| 3   | 2, 2, 2, 2, 2   | 2, 2, 2, 2, 2 | 4, 4, 2, 0, 0 | +8 |
+| 4   | 2, 2, 4, 0, 0   | 2, 2, 4, 0, 0 | 4, 4, 0, 0, 0 | +4 |
+| 5   | 4, 4, 8, 0, 0   | 4, 4, 8, 0, 0 | 8, 8, 0, 0, 0 | +8 |
+
+| **Total** | | | | **+28** |
+
+**Row 1**
+Original row:
+0  2  0  2  0
+
+After sliding:
+2  2  0  0  0
+
+After merging:
+4  0  0  0  0
+
+Score gained: +4
+
+**Row 2**
+
+Original row:
+2  2  2  0  0
+
+After sliding:
+2  2  2  0  0
+
+After merging:
+4  2  0  0  0
+
+Score gained: +4
+
+**Row 3**
+Original row:
+2  2  2  2  2
+
+After sliding:
+2  2  2  2  2
+
+After merging:
+4  4  2  0  0
+
+Score gained: +8
+
+**Row 4**
+Original row:
+2  2  4  0  0
+
+After sliding:
+2  2  4  0  0
+
+After merging:
+4  4  0  0  0
+
+Score gained: +4
+
+**Row 5**
+Original row:
+4  4  8  0  0
+
+After sliding:
+4  4  8  0  0
+
+After merging:
+8  8  0 0  0
+
+Score gained: +8
+
+4. Final Board Before Random Tile Insertion
+ After all five rows have been processed, the resulting board is:
+  
+4  0  0  0  0
+4  2  0  0  0
+4  4  2  0  0
+4  4  0  0  0
+8  8  0  0  0
+
+ 5. Score Calculation
+The total score gained from the movement is calculated by adding the values of all newly created tiles.
+- Row 1: +4
+- Row 2: +4
+- Row 3: +8
+- Row 4: +4
+- Row 5: +8
+
+**Total score gained:**
+
+4 + 4 + 8 + 4 + 8 = 28
+
+The updated score is 28, and the successful move count increases from 0 to 1.
+
+6. Merge-Once 
+The merge-once rule ensures that a tile created by merging cannot merge again in the same movement.
+
+For example, Row 4 begins with:
+2  2  4  0  0
+
+The first two tiles merge to create a 4. Even though another 4 is immediately beside it, the newly created 4 cannot merge with the existing 4 during that same move.
+
+Therefore, the resulting row is:
+4  4  0  0  0
+
+This demonstrates that each tile can participate in only one merge per movement.
+
+ 7. Random Tile Insertion
+Because the board changed during the movement, the move is considered successful.
+After the movement is completed, the program should insert exactly one new tile with a value of 2 or 4 into an empty position on the board.
+The final board before random insertion is the board shown in Section 4. The position of the newly inserted tile depends on the program's random selection.
+
+The successful move count increases by one, and no additional score is gained from inserting the new tile.
