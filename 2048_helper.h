@@ -8,4 +8,6 @@ bool move_down(int board[5][5], int size, int& current_score);
 void print_board(int board[5][5], int size);
 void insert_random(int board[5][5], int size);
 
+bool save_game(int board[5][5], int size, int current_score, int successful_moves); 
+bool load_game(int board[5][5], int size, int& current_score, int& successful_moves);
 #endif

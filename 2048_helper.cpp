@@ -2,7 +2,10 @@
 #include <iostream>
 #include <random>
 #include <iomanip>
+#include <fstream>
+#include <string>
 using namespace std;
+
 bool move_left(int board[5][5], int size, int& current_score)
 {
     bool board_changed = false; 
@@ -171,23 +174,170 @@ void print_board(int board[5][5], int numrows) {
 	cout << "\t" << endl << endl;
 }
 
-void insert_random(int board[5][5], int numrows) {
+void insert_random(int board[5][5], int numrows) 
+{
 	int r, c;
 	int empty_count = 0;
-	for (int r = 0; r < numrows; r++) {
-		for (int c = 0; c < 5; c++) {
+	for (int r = 0; r < numrows; r++) 
+	{
+		for (int c = 0; c < 5; c++) 
+		{
 			if (board[r][c] == 0)
 				empty_count++;
 		}
 	}
-	if (empty_count > 0) {
-		while (true) {
+	if (empty_count > 0) 
+	{
+		while (true) 
+		{
 			r = rand() % numrows;
 			c = rand() % numrows;
-			if (board[r][c] == 0) {
+			if (board[r][c] == 0) 
+			{
 				board[r][c] = 2 * (1 + (rand() % 2));
 				break;
 			}
 		}
 	}
 }
+bool save_game(int board[5][5], int size, int current_score, int successful_moves)//SAVE GAME, write down current score, # of moves, what the matrix looked like when game was saved 
+{
+    ofstream sfile; //creates ofstream variable named "sfile" for save file
+    sfile.open("savegame.txt"); //attaches savegame.txt to ofstream
+    
+    if(!sfile) //this checks whether the file failed to open 
+    {
+        cout<<"Error: Unable to open save file."<<endl;
+        return false; //says saving was Unsuccessful
+    }
+    
+    sfile<<"CS211_2048_V1"<<endl; //use sfile instead of cout since we are writing this in the file we made, NOT the terminal
+    sfile<<current_score<<" "<<successful_moves<<endl; //writing current score and movements in file EX: 8 3
+    
+    for(int r = 0; r < size; r++)
+    {
+        for(int c = 0; c < size; c++)
+        {
+            sfile<<board[r][c]<<" ";
+        }
+        
+        sfile<<endl;
+    }
+    
+    sfile.close(); //closes file
+    
+    if(!sfile) //checks writing and closing success 
+    {
+        cout<<"Error: Unable to write save file."<<endl;
+        return false;
+        
+    }
+    
+    return true; //saving successful AFTER verfying
+}
+bool load_game(int board[5][5], int size, int& current_score, int& successful_moves)//LOAD GAME, reads what is in the save file and loads it 
+{
+    ifstream sfile; //input file 
+    sfile.open("savegame.txt");//connects to our saved game
+    
+    if(!sfile) //checks if file failed to open
+    {
+        cout<<"Error: Unable to open save file."<<endl;
+        return false; //says loading was Unsuccessful
+    }
+    
+    string loadversion; //read load version from the file
+    sfile>>loadversion; //^
+    
+    if(loadversion != "CS211_2048_V1")
+    {
+        cout<<"Error: Invalid save file version."<<endl;
+        return false;
+    }
+    
+    int temp_score;
+    int temp_moves;
+    
+    sfile>>temp_score>>temp_moves; //reads and stores score and moves 
+    
+    if(!sfile)
+    {
+        cout<<"Error: Missing or invalid save file counters."<<endl;
+        return false;
+    }
+    if(temp_score < 0 or temp_moves < 0) //makes sure no negatives, otherwise rejects file
+    {
+        cout<<"Error: Invalid save file counters."<<endl;
+        return false;
+    }
+    
+    int temp_board[5][5]; //creating temp board to verify everything is correct before transfering values into actual board
+    
+    for(int r = 0; r < size; r++)
+    {
+        for(int c = 0; c < size; c++)
+        {
+            sfile>>temp_board[r][c];
+            
+            if(!sfile)
+            {
+                cout<<"Error: Missing or invalid board data."<<endl; //checking success
+                return false;
+            }
+            
+            bool valid_tile = false; //checking each tile is valid
+
+            if(temp_board[r][c] == 0) //check tile = 0
+            {
+                valid_tile = true;
+            }
+            else if(temp_board[r][c] >= 2) //check tile atleast 2 if not = 0 
+            {
+                int value = temp_board[r][c];
+
+                while(value % 2 == 0) //loop continues while value is divisible by 2
+                {
+                    value = value / 2;
+                }
+
+                if(value == 1) //cheking if value is exactly 1, if not then value is invalid 
+                {
+                    valid_tile = true;
+                }
+            }
+
+            if(!valid_tile) //rejects invalid tiles
+            {
+                cout<<"Error: Invalid tile value."<<endl;
+                return false;
+            }
+        }
+    }
+    
+    //check for extra values, must only have 25 
+    char extravalues;
+    
+    if(sfile>>extravalues)
+    {
+        cout<<"Error: Extra content found in file."<<endl;
+        return false;
+        
+    }
+    
+    //copy values from temp board onto actual after verifying
+    for(int r = 0; r < size; r++)
+    {
+        for(int c = 0; c < size; c++)
+        {
+            board[r][c] = temp_board[r][c];
+        }
+    }
+    
+    current_score = temp_score;
+    successful_moves = temp_moves;
+    
+    sfile.close();
+
+    return true;
+}
+
